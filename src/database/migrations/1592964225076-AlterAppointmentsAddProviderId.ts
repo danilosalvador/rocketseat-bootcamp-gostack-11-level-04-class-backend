@@ -14,6 +14,7 @@ export default class AlterAppointmentsAddProviderId1592964225076
       new TableColumn({
         name: 'provider_id',
         type: 'uuid',
+        isNullable: true,
       }),
       new TableColumn({
         name: 'created_at',
@@ -34,6 +35,8 @@ export default class AlterAppointmentsAddProviderId1592964225076
         columnNames: ['provider_id'],
         referencedTableName: 'users',
         referencedColumnNames: ['id'],
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
       }),
     );
   }
@@ -52,6 +55,7 @@ export default class AlterAppointmentsAddProviderId1592964225076
       new TableColumn({
         name: 'provider',
         type: 'varchar',
+        isNullable: true,
       }),
     );
   }
