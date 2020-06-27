@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
 
 import authConfig from '../config/auth';
+import AppError from '../errors/AppError';
 
 interface TokenPayload {
   iat: number;
@@ -17,7 +18,7 @@ export default function ensureSession(
   const authHeader = request.headers.authorization;
 
   if (!authHeader) {
-    throw new Error('Autenticação não encontrada.');
+    throw new AppError('Autenticação não encontrada.', 401);
   }
 
   const [, token] = authHeader.split(' ');
@@ -33,6 +34,6 @@ export default function ensureSession(
 
     next();
   } catch {
-    throw new Error('Autenticação inválida');
+    throw new AppError('Autenticação inválida', 401);
   }
 }
