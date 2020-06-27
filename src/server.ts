@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import 'reflect-metadata';
 
 import routes from './routes';
+import uplaodConfig from './config/upload';
 import './database';
 
 const app = express();
@@ -21,6 +22,7 @@ function logRequest(request: Request, response: Response, next: NextFunction) {
 }
 
 app.use(logRequest);
+app.use('/files', express.static(uplaodConfig.directory));
 app.use(routes);
 
 app.listen(3333, () => {
