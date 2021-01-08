@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
-import { hash } from 'bcryptjs';
 
+import IHashProvider from '@modules/users/providers/HashProvider/models/IHashProvider';
 import IUsersRespository from '@modules/users/repositories/IUsersRepository';
 import AppError from '@shared/errors/AppError';
 
@@ -17,6 +17,9 @@ class CreateUserService {
   constructor(
     @inject('UsersRespository')
     private usersRespository: IUsersRespository,
+
+    @inject('HashProvider')
+    private hashProvider: IHashProvider,
   ) {}
 
   public async Execute({ name, email, password }: IRequestDTO): Promise<User> {
@@ -26,7 +29,7 @@ class CreateUserService {
       throw new AppError('Email informado já foi cadastrado.');
     }
 
-    const hashedPassword = await hash(password, 8);
+    const hashedPassword = await this.hashProvider.generateHash(password);
 
     const user = await this.usersRespository.create({
       name,

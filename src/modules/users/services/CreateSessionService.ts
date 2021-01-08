@@ -1,8 +1,8 @@
 import { inject, injectable } from 'tsyringe';
-import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
+import IHashProvider from '@modules/users/providers/HashProvider/models/IHashProvider';
 
 import authConfig from '@config/auth';
 import AppError from '@shared/errors/AppError';
@@ -23,6 +23,9 @@ class CreateSessionService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+
+    @inject('HashProvider')
+    private hashProvider: IHashProvider,
   ) {}
 
   public async Execute({
@@ -35,7 +38,10 @@ class CreateSessionService {
       throw new AppError('Email e/ou senha incorreta.', 401);
     }
 
-    const passwordMatched = await compare(password, user.password);
+    const passwordMatched = await this.hashProvider.compareHash(
+      password,
+      user.password,
+    );
 
     if (!passwordMatched) {
       throw new AppError('Email e/ou senha incorreta.', 401);
