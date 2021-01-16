@@ -13,7 +13,7 @@ interface IRequestDTO {
 @injectable()
 class UpdateUserAvatarService {
   constructor(
-    @inject('UsersRespository')
+    @inject('UsersRepository')
     private usersRepository: IUsersRepository,
 
     @inject('StorangeProvider')

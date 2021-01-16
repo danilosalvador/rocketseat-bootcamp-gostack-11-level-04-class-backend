@@ -5,20 +5,27 @@ import AppError from '@shared/errors/AppError';
 import CreateSessionService from './CreateSessionService';
 import CreateUserService from './CreateUserService';
 
+let fakeUsersRepository: FakeUsersRepository;
+let fakeHashProvider: FakeHashProvider;
+let createSessionService: CreateSessionService;
+let createUserService: CreateUserService;
+
 describe('CreateSession', () => {
+  beforeEach(() => {
+    fakeUsersRepository = new FakeUsersRepository();
+    fakeHashProvider = new FakeHashProvider();
+
+    createSessionService = new CreateSessionService(
+      fakeUsersRepository,
+      fakeHashProvider,
+    );
+    createUserService = new CreateUserService(
+      fakeUsersRepository,
+      fakeHashProvider,
+    );
+  });
+
   it('Deve ser capaz de criar uma sessão', async () => {
-    const fakeUserRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
-
-    const createSessionService = new CreateSessionService(
-      fakeUserRepository,
-      fakeHashProvider,
-    );
-    const createUserService = new CreateUserService(
-      fakeUserRepository,
-      fakeHashProvider,
-    );
-
     const user = await createUserService.Execute({
       name: 'Danilo Salvador',
       email: 'danilo.salvador@smartlogic.com.br',
@@ -34,15 +41,8 @@ describe('CreateSession', () => {
     expect(response.user).toEqual(user);
   });
 
-  it('Não deve ser capaz de criar uma sessão com usuário inválido', () => {
-    const fakeUserRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
-    const createSessionService = new CreateSessionService(
-      fakeUserRepository,
-      fakeHashProvider,
-    );
-
-    expect(
+  it('Não deve ser capaz de criar uma sessão com usuário inválido', async () => {
+    await expect(
       createSessionService.Execute({
         email: 'danilo.salvador@smartlogic.com.br',
         password: '123456',
@@ -51,25 +51,13 @@ describe('CreateSession', () => {
   });
 
   it('Não deve ser capaz de criar uma sessão com senha inválida', async () => {
-    const fakeUserRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
-
-    const createUserService = new CreateUserService(
-      fakeUserRepository,
-      fakeHashProvider,
-    );
-    const createSessionService = new CreateSessionService(
-      fakeUserRepository,
-      fakeHashProvider,
-    );
-
     await createUserService.Execute({
       name: 'Danilo Salvador',
       email: 'danilo.salvador@smartlogic.com.br',
       password: '123456',
     });
 
-    expect(
+    await expect(
       createSessionService.Execute({
         email: 'danilo.salvador@smartlogic.com.br',
         password: '654321',

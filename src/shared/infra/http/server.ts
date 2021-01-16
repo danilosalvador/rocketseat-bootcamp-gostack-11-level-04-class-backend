@@ -26,7 +26,7 @@ function logRequest(request: Request, response: Response, next: NextFunction) {
 }
 
 app.use(logRequest);
-app.use('/files', express.static(uplaodConfig.directory));
+app.use('/files', express.static(uplaodConfig.uploadsFolder));
 app.use(routes);
 
 app.use((err: Error, request: Request, response: Response, _: NextFunction) => {

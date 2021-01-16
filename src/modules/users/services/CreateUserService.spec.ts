@@ -5,16 +5,22 @@ import FakeHashProvider from '@modules/users/providers/HashProvider/fakes/FakeHa
 
 import CreateUserService from './CreateUserService';
 
-describe('CreateUser', () => {
-  it('Deve ser capaz de criar um novo usuário', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
+let fakeUsersRepository: FakeUsersRepository;
+let fakeHashProvider: FakeHashProvider;
+let createUserService: CreateUserService;
 
-    const createUserService = new CreateUserService(
+describe('CreateUser', () => {
+  beforeEach(() => {
+    fakeUsersRepository = new FakeUsersRepository();
+    fakeHashProvider = new FakeHashProvider();
+
+    createUserService = new CreateUserService(
       fakeUsersRepository,
       fakeHashProvider,
     );
+  });
 
+  it('Deve ser capaz de criar um novo usuário', async () => {
     const user = await createUserService.Execute({
       name: 'Danilo Salvador',
       email: 'danilo.salvador@smartlogic.com.br',
@@ -25,21 +31,13 @@ describe('CreateUser', () => {
   });
 
   it('Não deve ser capaz de criar um usuário com o mesmo e-mail.', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
-
-    const createUserService = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashProvider,
-    );
-
-    await createUserService.Execute({
+    await fakeUsersRepository.create({
       name: 'Danilo Salvador',
       email: 'danilo.salvador@smartlogic.com.br',
       password: '123456',
     });
 
-    expect(
+    await expect(
       createUserService.Execute({
         name: 'Danilo Salvador',
         email: 'danilo.salvador@smartlogic.com.br',
