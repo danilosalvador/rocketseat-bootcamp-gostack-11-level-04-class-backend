@@ -1,20 +1,20 @@
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
-import FakeStorangeProvider from '@shared/container/providers/StorangeProvider/fakes/FakeStorangeProvider';
+import FakeStorageProvider from '@shared/container/providers/StorageProvider/fakes/FakeStorageProvider';
 import AppError from '@shared/errors/AppError';
 import UpdateUserAvatarService from './UpdateUserAvatarService';
 
 let fakeUsersRepository: FakeUsersRepository;
-let fakeStorangeProvider: FakeStorangeProvider;
+let fakeStorageProvider: FakeStorageProvider;
 let updateUserAvatarService: UpdateUserAvatarService;
 
 describe('UpdateUserAvatar', () => {
   beforeEach(() => {
     fakeUsersRepository = new FakeUsersRepository();
-    fakeStorangeProvider = new FakeStorangeProvider();
+    fakeStorageProvider = new FakeStorageProvider();
 
     updateUserAvatarService = new UpdateUserAvatarService(
       fakeUsersRepository,
-      fakeStorangeProvider,
+      fakeStorageProvider,
     );
   });
 
@@ -43,7 +43,7 @@ describe('UpdateUserAvatar', () => {
   });
 
   it('Deve ser capaz de apagar o avatar antigo antes de salvar o novo', async () => {
-    const deleteFile = spyOn(fakeStorangeProvider, 'deleteFile');
+    const deleteFile = spyOn(fakeStorageProvider, 'deleteFile');
 
     const user = await fakeUsersRepository.create({
       name: 'Danilo Salvador',

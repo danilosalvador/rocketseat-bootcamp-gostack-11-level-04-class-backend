@@ -1,6 +1,6 @@
-import IStorangeProvider from '@shared/container/providers/StorangeProvider/models/IStorangeProvider';
+import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
 
-class FakeStorangeProvider implements IStorangeProvider {
+class FakeStorageProvider implements IStorageProvider {
   private storange: string[] = [];
 
   public async saveFile(file: string): Promise<string> {
@@ -16,4 +16,4 @@ class FakeStorangeProvider implements IStorangeProvider {
   }
 }
 
-export default FakeStorangeProvider;
+export default FakeStorageProvider;

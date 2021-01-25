@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
-import IStorangeProvider from '@shared/container/providers/StorangeProvider/models/IStorangeProvider';
+import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
 import AppError from '@shared/errors/AppError';
 import User from '@modules/users/infra/typeorm/entities/User';
 
@@ -16,8 +16,8 @@ class UpdateUserAvatarService {
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
 
-    @inject('StorangeProvider')
-    private storangeProvider: IStorangeProvider,
+    @inject('StorageProvider')
+    private storageProvider: IStorageProvider,
   ) {}
 
   public async execute({
@@ -32,11 +32,11 @@ class UpdateUserAvatarService {
 
     if (user.avatar) {
       // Apaga o arquivo de avatar antigo
-      await this.storangeProvider.deleteFile(user.avatar);
+      await this.storageProvider.deleteFile(user.avatar);
     }
 
     // Salva o novo arquivo de avatar
-    const fileName = await this.storangeProvider.saveFile(avatarFileName);
+    const fileName = await this.storageProvider.saveFile(avatarFileName);
 
     user.avatar = fileName;
     await this.usersRepository.update(user);

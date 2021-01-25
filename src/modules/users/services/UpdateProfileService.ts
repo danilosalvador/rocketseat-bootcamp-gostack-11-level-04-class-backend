@@ -9,8 +9,8 @@ interface IRequestDTO {
   user_id: string;
   name: string;
   email: string;
-  old_password?: string;
-  new_password?: string;
+  password_old?: string;
+  password_new?: string;
 }
 
 @injectable()
@@ -27,8 +27,8 @@ class UpdateProfileService {
     user_id,
     name,
     email,
-    old_password,
-    new_password,
+    password_old,
+    password_new,
   }: IRequestDTO): Promise<User> {
     const user = await this.usersRepository.findById(user_id);
 
@@ -44,15 +44,15 @@ class UpdateProfileService {
 
     Object.assign(user, { name, email });
 
-    if (new_password && !old_password) {
+    if (password_new && !password_old) {
       throw new AppError(
         'É necessário informar a senha antiga para atualização de uma nova senha',
       );
     }
 
-    if (old_password && new_password) {
+    if (password_old && password_new) {
       const checkOldPassword = await this.hashProvider.compareHash(
-        old_password,
+        password_old,
         user.password,
       );
 
@@ -60,7 +60,7 @@ class UpdateProfileService {
         throw new AppError('Senha antiga incorreta');
       }
 
-      user.password = await this.hashProvider.generateHash(new_password);
+      user.password = await this.hashProvider.generateHash(password_new);
     }
 
     return this.usersRepository.update(user);

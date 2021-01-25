@@ -15,41 +15,41 @@
         }
     </style>
 </head>
-    
+
 <body>
 <div class='wrapper'>
     <div class='pad1'>
         <h1><a href="../../index.html">All files</a> / <a href="index.html">users/services</a> UpdateUserAvatarService.ts</h1>
         <div class='clearfix'>
-            
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
                 <span class='fraction'>48/48</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
                 <span class='fraction'>9/9</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
                 <span class='fraction'>2/2</span>
             </div>
-        
-            
+
+
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
                 <span class='fraction'>48/48</span>
             </div>
-        
-            
+
+
         </div>
         <p class="quiet">
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
@@ -156,7 +156,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { inject, injectable } from 'tsyringe';
 &nbsp;
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
-import IStorangeProvider from '@shared/container/providers/StorangeProvider/models/IStorangeProvider';
+import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
 import AppError from '@shared/errors/AppError';
 import User from '@modules/users/infra/typeorm/entities/User';
 &nbsp;
@@ -171,8 +171,8 @@ class UpdateUserAvatarService {
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
 &nbsp;
-    @inject('StorangeProvider')
-    private storangeProvider: IStorangeProvider,
+    @inject('StorageProvider')
+    private storageProvider: IStorageProvider,
   ) {}
 &nbsp;
   public async execute({
@@ -187,11 +187,11 @@ class UpdateUserAvatarService {
 &nbsp;
     if (user.avatar) {
       // Apaga o arquivo de avatar antigo
-      await this.storangeProvider.deleteFile(user.avatar);
+      await this.storageProvider.deleteFile(user.avatar);
     }
 &nbsp;
     // Salva o novo arquivo de avatar
-    const fileName = await this.storangeProvider.saveFile(avatarFileName);
+    const fileName = await this.storageProvider.saveFile(avatarFileName);
 &nbsp;
     user.avatar = fileName;
     await this.usersRepository.update(user);
@@ -221,4 +221,3 @@ export default UpdateUserAvatarService;
         <script src="../../block-navigation.js"></script>
     </body>
 </html>
-    
