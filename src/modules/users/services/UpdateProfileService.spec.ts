@@ -77,8 +77,8 @@ describe('UpdateProfile', () => {
       user_id: user.id,
       name: 'Danilo Salvador 1',
       email: 'danilo.salvador1@smartlogic.com.br',
-      old_password: '123456',
-      new_password: '123123',
+      password_old: '123456',
+      password_new: '123123',
     });
 
     expect(updatedUser.password).toBe('123123');
@@ -96,7 +96,7 @@ describe('UpdateProfile', () => {
         user_id: user.id,
         name: 'Danilo Salvador 1',
         email: 'danilo.salvador1@smartlogic.com.br',
-        new_password: '123123',
+        password_new: '123123',
       }),
     ).rejects.toBeInstanceOf(AppError);
   });
@@ -113,8 +113,8 @@ describe('UpdateProfile', () => {
         user_id: user.id,
         name: 'Danilo Salvador 1',
         email: 'danilo.salvador1@smartlogic.com.br',
-        old_password: 'senha_incorreta',
-        new_password: '123123',
+        password_old: 'senha_incorreta',
+        password_new: '123123',
       }),
     ).rejects.toBeInstanceOf(AppError);
   });

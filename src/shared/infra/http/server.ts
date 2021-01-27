@@ -2,11 +2,14 @@ import 'reflect-metadata';
 import 'dotenv/config';
 
 import express, { Request, Response, NextFunction } from 'express';
+import cors from 'cors';
 import { errors } from 'celebrate';
 import 'express-async-errors';
 
 import uplaodConfig from '@config/upload';
 import AppError from '@shared/errors/AppError';
+import rateLimiter from '@shared/infra/http/middlewares/rateLimiter';
+import logRequest from '@shared/infra/http/middlewares/logRequest';
 import routes from './routes';
 
 import '@shared/infra/typeorm';
@@ -14,20 +17,9 @@ import '@shared/container';
 
 const app = express();
 
+app.use(rateLimiter);
+app.use(cors());
 app.use(express.json());
-
-function logRequest(request: Request, response: Response, next: NextFunction) {
-  const { method, url } = request;
-
-  const logLabel = `[${method.toUpperCase()}] ${url}`;
-
-  console.time(logLabel);
-
-  next();
-
-  console.timeEnd(logLabel);
-}
-
 app.use(logRequest);
 app.use('/files', express.static(uplaodConfig.uploadsFolder));
 app.use(routes);

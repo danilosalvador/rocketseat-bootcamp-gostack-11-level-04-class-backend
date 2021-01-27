@@ -3,12 +3,10 @@ import FakeHashProvider from '@modules/users/providers/HashProvider/fakes/FakeHa
 
 import AppError from '@shared/errors/AppError';
 import CreateSessionService from './CreateSessionService';
-import CreateUserService from './CreateUserService';
 
 let fakeUsersRepository: FakeUsersRepository;
 let fakeHashProvider: FakeHashProvider;
 let createSessionService: CreateSessionService;
-let createUserService: CreateUserService;
 
 describe('CreateSession', () => {
   beforeEach(() => {
@@ -19,14 +17,10 @@ describe('CreateSession', () => {
       fakeUsersRepository,
       fakeHashProvider,
     );
-    createUserService = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashProvider,
-    );
   });
 
   it('Deve ser capaz de criar uma sessão', async () => {
-    const user = await createUserService.Execute({
+    const user = await fakeUsersRepository.create({
       name: 'Danilo Salvador',
       email: 'danilo.salvador@smartlogic.com.br',
       password: '123456',
@@ -51,7 +45,7 @@ describe('CreateSession', () => {
   });
 
   it('Não deve ser capaz de criar uma sessão com senha inválida', async () => {
-    await createUserService.Execute({
+    await fakeUsersRepository.create({
       name: 'Danilo Salvador',
       email: 'danilo.salvador@smartlogic.com.br',
       password: '123456',
